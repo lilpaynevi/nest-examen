@@ -1,0 +1,37 @@
+version: "3"
+services:
+  database:
+    image: postgres:13
+    container_name: database
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: nest
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+
+  adminer:
+    image: adminer
+    container_name: adminer2
+    restart: always
+    ports:
+      - "8080:8080"
+
+  app:
+    container_name: front
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    depends_on:
+      - database
+
+volumes:
+  db_data:
